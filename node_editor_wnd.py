@@ -15,7 +15,7 @@ class NodeEditorWnd(QWidget):
         self.setGeometry(200, 200, 800, 600)
 
         self.layout = QVBoxLayout()
-        self.layout.setContentsMargins(0,0,0,0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layout)
 
         # Create graphics scene
