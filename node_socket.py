@@ -51,9 +51,9 @@ class Socket(Serializable):
             ('socket_type', self.socket_type)
         ])
 
-    def deserialize(self, data, hashmap={}):
-        print("deserializating data", data)
-        self.id = data["id"]
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        # print("deserializating data", data)
+        if restore_id: self.id = data["id"]
         hashmap[data['id']] = self
 
         return True
