@@ -17,6 +17,7 @@ DEBUG = True
 
 
 class QDMGraphicsView(QGraphicsView):
+    scenePosChanged = pyqtSignal(int, int)
     def __init__(self, grScene, parent=None):
         super().__init__(parent)
         self.grScene = grScene
@@ -196,38 +197,45 @@ class QDMGraphicsView(QGraphicsView):
             self.cutline.line_points.append(pos)
             self.cutline.update()
 
+        self.last_scene_mouse_position = self.mapToScene(event.pos())
+
+        self.scenePosChanged.emit(
+            int(self.last_scene_mouse_position.x()),
+            int(self.last_scene_mouse_position.y())
+        )
+
         super().mouseMoveEvent(event)
 
     def keyPressEvent(self, event):
         # print('grView:: KEY press')
-        if event.key() == Qt.Key_Delete:
-            if not self.editingFlag:
-                self.deleteSelected()
-            else:
-                super().keyPressEvent(event)
-        elif event.key() == Qt.Key_S and event.modifiers() & Qt.ControlModifier:
-            self.grScene.scene.saveToFile("graph.json.txt")
-        elif event.key() == Qt.Key_L and event.modifiers() & Qt.ControlModifier:
-            self.grScene.scene.loadFromFile("graph.json.txt")
+        # if event.key() == Qt.Key_Delete:
+        #     if not self.editingFlag:
+        #         self.deleteSelected()
+        #     else:
+        #         super().keyPressEvent(event)
+        # elif event.key() == Qt.Key_S and event.modifiers() & Qt.ControlModifier:
+        #     self.grScene.scene.saveToFile("graph.json.txt")
+        # elif event.key() == Qt.Key_L and event.modifiers() & Qt.ControlModifier:
+        #     self.grScene.scene.loadFromFile("graph.json.txt")
         # elif event.key() == Qt.Key_1:
         #     self.grScene.scene.history.storeHistory("Item A")
         # elif event.key() == Qt.Key_2:
         #     self.grScene.scene.history.storeHistory("Item B")
         # elif event.key() == Qt.Key_3:
         #     self.grScene.scene.history.storeHistory("Item C")
-        elif event.key() == Qt.Key_Z and event.modifiers() & Qt.ControlModifier and not event.modifiers() & Qt.ShiftModifier:
-            self.grScene.scene.history.undo()
-        elif event.key() == Qt.Key_Z and event.modifiers() & Qt.ControlModifier and event.modifiers() & Qt.ShiftModifier:
-            self.grScene.scene.history.redo()
-        elif event.key() == Qt.Key_H:
-            print("HISTORY:     len(%d)" % len(self.grScene.scene.history.history_stack),
-                  " -- current_step", self.grScene.scene.history.history_current_step)
-            ix = 0
-            for item in self.grScene.scene.history.history_stack:
-                print("#", ix, "--", item['desc'])
-                ix += 1
-        else:
-            super().keyPressEvent(event)
+        # elif event.key() == Qt.Key_Z and event.modifiers() & Qt.ControlModifier and not event.modifiers() & Qt.ShiftModifier:
+        #     self.grScene.scene.history.undo()
+        # elif event.key() == Qt.Key_Z and event.modifiers() & Qt.ControlModifier and event.modifiers() & Qt.ShiftModifier:
+        #     self.grScene.scene.history.redo()
+        # elif event.key() == Qt.Key_H:
+        #     print("HISTORY:     len(%d)" % len(self.grScene.scene.history.history_stack),
+        #           " -- current_step", self.grScene.scene.history.history_current_step)
+        #     ix = 0
+        #     for item in self.grScene.scene.history.history_stack:
+        #         print("#", ix, "--", item['desc'])
+        #         ix += 1
+        # else:
+        super().keyPressEvent(event)
 
     def cutIntersectingEdges(self):
         for ix in range(len(self.cutline.line_points) -1):

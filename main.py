@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 
-from node_editor_wnd import NodeEditorWnd
+from node_editor_window import NodeEditorWindow
 
 if __name__ == '__main__':
 
@@ -10,6 +10,6 @@ if __name__ == '__main__':
     # label = QLabel("Hello PyQt5 !")
     # label.show()
 
-    wnd = NodeEditorWnd()
+    wnd = NodeEditorWindow()
 
     sys.exit(app.exec_())

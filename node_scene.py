@@ -63,7 +63,7 @@ class Scene(Serializable):
         ])
 
     def deserialize(self, data, hashmap={}):
-        print("deserializating data", data)
+        # print("deserializating data", data)
 
         self.clear()
         hashmap = {}
