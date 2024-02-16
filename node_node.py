@@ -27,13 +27,13 @@ class Node(Serializable):
         self.outputs = []
         counter = 0
         for item in inputs:
-            socket = Socket(node=self, index=counter, position=LEFT_BOTTOM, socket_type=item)
+            socket = Socket(node=self, index=counter, position=LEFT_BOTTOM, socket_type=item, multi_edges=False)
             counter += 1
             self.inputs.append(socket)
 
         counter = 0
         for item in outputs:
-            socket = Socket(node=self, index=counter, position=RIGHT_TOP, socket_type=item)
+            socket = Socket(node=self, index=counter, position=RIGHT_TOP, socket_type=item, multi_edges=True)
             counter += 1
             self.outputs.append(socket)
 
@@ -69,19 +69,18 @@ class Node(Serializable):
 
     def updateConnectedEdges(self):
         for socket in self.inputs + self.outputs: # Groups arrays of inputs and outputs
-            if socket.hasEdge():
-                # print('updating')
-                socket.edge.updatePositions()
-            # else:
-            #     print('noop')
+            # if socket.hasEdge():
+            for edge in socket.edges:
+                edge.updatePositions()
 
     def remove(self):
         if DEBUG: print("> Removing Node", self)
         if DEBUG: print(" - remove all edges from sockets")
         for socket in (self.inputs + self.outputs):
-            if socket .hasEdge():
-                if DEBUG: print("      - removing from socket:", socket, "edge", socket.edge)
-                socket.edge.remove()
+            # if socket .hasEdge():
+            for edge in socket.edges:
+                if DEBUG: print("      - removing from socket:", socket, "edge", edge)
+                edge.remove()
         if DEBUG: print(" - remove grNode")
         self.scene.grScene.removeItem(self.grNode)
         self.grNode = None
@@ -104,7 +103,6 @@ class Node(Serializable):
         ])
 
     def deserialize(self, data, hashmap={}, restore_id=True):
-        # print("deserializating data", data)
         if restore_id: self.id = data["id"]
         hashmap[data['id']] = self
 

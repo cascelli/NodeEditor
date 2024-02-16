@@ -14,6 +14,10 @@ class Edge(Serializable):
         super().__init__()
         self.scene = scene
 
+        # default init
+        self._start_socket = None
+        self._end_socket = None
+
         self.start_socket = start_socket
         self.end_socket = end_socket
         self.edge_type = edge_type
@@ -29,18 +33,30 @@ class Edge(Serializable):
 
     @start_socket.setter
     def start_socket(self, value):
+        # if we were assigned to some socket before, delete us from this socket
+        if self._start_socket is not None:
+            self._start_socket.removeEdge(self)
+
+        # assign new start socket
         self._start_socket = value
+        # addEdge to the Socket class
         if self.start_socket is not None:
-            self.start_socket.edge = self
+            self.start_socket.addEdge(self)
 
     @property
     def end_socket(self): return self._end_socket
 
     @end_socket.setter
     def end_socket(self, value):
+        # if we were assigned to some socket before, delete us from this socket
+        if self._end_socket is not None:
+            self._end_socket.removeEdge(self)
+
+        # assign new end socket
         self._end_socket = value
+        # addEdge to the socket class
         if self.end_socket is not None:
-            self.end_socket.edge = self
+            self.end_socket.addEdge(self)
 
     @property
     def edge_type(self): return self._edge_type
@@ -81,10 +97,11 @@ class Edge(Serializable):
         self.grEdge.update()
 
     def remove_from_sockets(self):
-        if self.start_socket is not None:
-            self.start_socket.edge = None
-        if self.end_socket is not None:
-            self.end_socket.edge = None
+        # # @TODO: Fix ME!!!
+        # if self.start_socket is not None:
+        #     self.start_socket.removeEdge(None)
+        # if self.end_socket is not None:
+        #     self.end_socket.removeEdge(None)
         self.end_socket = None
         self.start_socket = None
 

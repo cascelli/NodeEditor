@@ -1,17 +1,18 @@
 
 
-# Node Editor using PyQt5 in Python
+# Node Editor usando Python e PyQt5
 
 Teste de projeto de editor gráfico baseado em objetos gráficos e interligação por "nós"
 Usando a Biblioteca [QGraphicsView](https://doc.qt.io/qt-6/qgraphicsview.html) do Qt
 
-Tutorial YouTybe : [AQUI](https://www.youtube.com/playlist?list=PLZSNHzwDCOggHLThIbCxUhWTgrKVemZkz)
-Repositorio do projeto : [GitLab](https://gitlab.com/pavel.krupala/pyqt-node-editor) 
-Usando PyCharm como IDE de desenvolvimento
+- HomePage do projeto original : [BlenderFreask](https://www.blenderfreak.com/tutorials/node-editor-tutorial-series/)
+- Tutorial YouTybe do projeto original : [AQUI](https://www.youtube.com/playlist?list=PLZSNHzwDCOggHLThIbCxUhWTgrKVemZkz)
+- Repositório do projeto original : [GitLab](https://gitlab.com/pavel.krupala/pyqt-node-editor)
+- IDE de desenvolvimento : PyCharm
 
-## Comandos do editor PyCharm Uteis
+## Comandos úteis do editor PyCharm
 
 - Mover linha acima ou abaixo :
    CTRL + SHIFT + UpArrow/DownArrow
-- 
+ 
 
