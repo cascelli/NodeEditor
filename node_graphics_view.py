@@ -21,11 +21,14 @@ class QDMGraphicsView(QGraphicsView):
     def __init__(self, grScene, parent=None):
         super().__init__(parent)
         self.grScene = grScene
+
         self.initUI()
+
         self.setScene(self.grScene)
 
         self.mode = MODE_NOOP
         self.editingFlag = False
+        self.rubberBandDraggingRectangle = False
 
         self.zoomInFactor = 1.25
         self.zoomClamp = True
@@ -38,22 +41,15 @@ class QDMGraphicsView(QGraphicsView):
         self.grScene.addItem(self.cutline)
 
     def initUI(self):
-        # self.setRenderHints(QPainter.Antialiasing | QPainter.HighQualityAntialiasing | QPainter.TextAntialising | QPainter.SmoothPixmapTransform)
         self.setRenderHints(QPainter.Antialiasing | QPainter.HighQualityAntialiasing | QPainter.SmoothPixmapTransform)
 
         self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
 
-        # self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        # self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
-        # self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        # self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
         self.setDragMode(QGraphicsView.RubberBandDrag)
-
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MiddleButton:
@@ -76,7 +72,6 @@ class QDMGraphicsView(QGraphicsView):
             super().mouseReleaseEvent(event)
 
     def middleMouseButtonPress(self, event):
-        # print("MMB pressed")
         releaseEvent = QMouseEvent(QEvent.MouseButtonRelease, event.localPos(), event.screenPos(),
                                    Qt.LeftButton, Qt.NoButton, event.modifiers())
         super().mouseReleaseEvent(releaseEvent)
@@ -101,7 +96,6 @@ class QDMGraphicsView(QGraphicsView):
 
         # if DEBUG: print("LMB + Click on", item, self.debug_modifiers(event))
 
-        # print(item)
         # logic
         if hasattr(item, "node") or isinstance(item, QDMGraphicsEdge) or item is None:
             if event.modifiers() & Qt.ShiftModifier:
@@ -113,7 +107,6 @@ class QDMGraphicsView(QGraphicsView):
                 return
 
         if type(item) is QDMGraphicsSocket:
-            # print('Socket was clicked')
             if self.mode == MODE_NOOP:
                 self.mode = MODE_EDGE_DRAG
                 self.edgeDragStart(item)
@@ -131,6 +124,8 @@ class QDMGraphicsView(QGraphicsView):
                 super().mouseReleaseEvent(fakeEvent)
                 QApplication.setOverrideCursor(Qt.CrossCursor)
                 return
+            else:
+                self.rubberBandDraggingRectangle = True
 
         super().mousePressEvent(event)
 
@@ -161,8 +156,9 @@ class QDMGraphicsView(QGraphicsView):
             self.mode = MODE_NOOP
             return
 
-        if self.dragMode() == QGraphicsView.RubberBandDrag:
+        if self.rubberBandDraggingRectangle:
             self.grScene.scene.history.storeHistory("Selection changed")
+            self.rubberBandDraggingRectangle = False
 
         super().mouseReleaseEvent(event)
 
@@ -280,6 +276,7 @@ class QDMGraphicsView(QGraphicsView):
     def edgeDragEnd(self, item):
         """ return True if skip the rest of the code"""
         self.mode = MODE_NOOP
+
         if type(item) is QDMGraphicsSocket:
             if item.socket != self.last_start_socket:
                 if DEBUG: print('View::edgeDragEnd ~   previous edge:', self.previousEdge)
@@ -303,8 +300,7 @@ class QDMGraphicsView(QGraphicsView):
         if DEBUG: print('View::edgeDragEnd ~ about to set socket to previous edge:', self.previousEdge)
         if self.previousEdge is not None:
             self.previousEdge.start_socket.edge = self.previousEdge
-
-        if DEBUG: print('View::edgeDragEnd ~ everything is done.')
+        if DEBUG: print('View::edgeDragEnd ~ everything done.')
 
         return False
 
@@ -323,9 +319,6 @@ class QDMGraphicsView(QGraphicsView):
     def wheelEvent(self, event):
         # calculate our zoom factor
         zoomOutFactor = 1 / self.zoomInFactor
-
-        # # store our scene position
-        # oldPos = self.mapToScene(event.pos())
 
         # calculate zoom
         if event.angleDelta().y() > 0:
