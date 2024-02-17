@@ -2,11 +2,12 @@
 
 # Node Editor usando Python e PyQt5
 
-Teste de projeto de editor gráfico baseado em objetos gráficos e interligação por "nós"
+Teste de projeto de editor baseado em objetos gráficos e interligação por "nós"
+
 Usando a Biblioteca [QGraphicsView](https://doc.qt.io/qt-6/qgraphicsview.html) do Qt
 
 - HomePage do projeto original : [BlenderFreask](https://www.blenderfreak.com/tutorials/node-editor-tutorial-series/)
-- Tutorial YouTybe do projeto original : [AQUI](https://www.youtube.com/playlist?list=PLZSNHzwDCOggHLThIbCxUhWTgrKVemZkz)
+- Tutorial YouTube do projeto original : [AQUI](https://www.youtube.com/playlist?list=PLZSNHzwDCOggHLThIbCxUhWTgrKVemZkz)
 - Repositório do projeto original : [GitLab](https://gitlab.com/pavel.krupala/pyqt-node-editor)
 - IDE de desenvolvimento : PyCharm
 
@@ -14,5 +15,20 @@ Usando a Biblioteca [QGraphicsView](https://doc.qt.io/qt-6/qgraphicsview.html) d
 
 - Mover linha acima ou abaixo :
    CTRL + SHIFT + UpArrow/DownArrow
- 
+
+## How to setup Python package with test an docs
+
+- Youtube tutorial [guide](https://www.youtube.com/watch?v=KPfrK8Smwrs&list=PLZSNHzwDCOggHLThIbCxUhWTgrKVemZkz&index=30)
+- Python packaging [guide](https://packaging.python.org)
+- Create projects swiftly - [Cookiecutter](https://github.com/cookiecutter/cookiecutter)
+  - Using cookiecutter :
+    - pip install cookiecutter
+    - cookiecutter https://github.com/audreyr/cookiecutter-pypackage
+- Documentation generator - [SPhinx](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
+   - Sphinx [Theming](https://www.sphinx-doc.org/en/master/usage/theming.html)
+   - Sphinx [RTD Theme](https://pypi.org/project/sphinx-rtd-theme/)
+- Project gitlab [repository](https://gitlab.com/pavel.krupala/pyqt-node-editor.git)
+  - to install from gitlab repository of the author, use: 
+    - pip install git+https://gitlab.com/pavel.krupala/pyqt-node-editor.git 
+
 
