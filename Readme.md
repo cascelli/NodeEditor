@@ -31,4 +31,9 @@ Usando a Biblioteca [QGraphicsView](https://doc.qt.io/qt-6/qgraphicsview.html) d
   - to install from gitlab repository of the author, use: 
     - pip install git+https://gitlab.com/pavel.krupala/pyqt-node-editor.git 
 
+## PyQt5 github repository
+
+- Base repository : [Here](https://github.com/baoboa/pyqt5)
+- Example - Main Window - [MDI](https://github.com/baoboa/pyqt5/tree/master/examples/mainwindows/mdi)
+
 
