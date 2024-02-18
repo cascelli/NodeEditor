@@ -1,5 +1,5 @@
 import traceback
 
-def dumbException(e):
+def dumpException(e):
     print('EXCEPTION:', e)
     traceback.print_tb(e.__traceback__)

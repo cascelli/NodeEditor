@@ -3,7 +3,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from nodeeditor.node_editor_window import NodeEditorWindow
-from nodeeditor.utils import dumbException
+from examples.example_calculator.calc_sub_window import CalculatorSubWindow
+from nodeeditor.utils import dumpException
 
 
 class CalculatorWindow(NodeEditorWindow):
@@ -58,6 +59,12 @@ class CalculatorWindow(NodeEditorWindow):
         self.separatorAct.setSeparator(True)
         self.aboutAct = QAction("&About", self, statusTip="Show the application's About box", triggered=self.about)
 
+    def onFileNew(self):
+        try:
+            subwnd = self.createMdiChild()
+            subwnd.show()
+        except Exception as e: dumpException(e)
+
     def about(self):
         QMessageBox.about(self, "About Calculator NodeEditor Example",
                 "The <b>Calculator NodeEditor</b> example demonstrates how to write multiple "
@@ -91,18 +98,18 @@ class CalculatorWindow(NodeEditorWindow):
         windows = self.mdiArea.subWindowList()
         self.separatorAct.setVisible(len(windows) != 0)
 
-        # for i, window in enumerate(windows):
-        #     child = window.widget()
-        #
-        #     text = "%d %s" % (i + 1, child.userFriendlyCurrentFile())
-        #     if i < 9:
-        #         text = '&' + text
-        #
-        #     action = self.windowMenu.addAction(text)
-        #     action.setCheckable(True)
-        #     action.setChecked(child is self.activeMdiChild())
-        #     action.triggered.connect(self.windowMapper.map)
-        #     self.windowMapper.setMapping(action, window)
+        for i, window in enumerate(windows):
+            child = window.widget()
+
+            text = "%d %s" % (i + 1, child.getUserFriendlyFilename())
+            if i < 9:
+                text = '&' + text
+
+            action = self.windowMenu.addAction(text)
+            action.setCheckable(True)
+            action.setChecked(child is self.activeMdiChild())
+            action.triggered.connect(self.windowMapper.map)
+            self.windowMapper.setMapping(action, window)
 
     def createToolBars(self):
         pass
@@ -122,6 +129,18 @@ class CalculatorWindow(NodeEditorWindow):
 
     def createStatusBar(self):
         self.statusBar().showMessage("Ready")
+
+    def createMdiChild(self):
+        nodeeditor = CalculatorSubWindow()
+        subwnd = self.mdiArea.addSubWindow(nodeeditor)
+        return subwnd
+
+    def activeMdiChild(self):
+        """" We-re returning NodeEditorWidget here """
+        activeSubWindow = self.mdiArea.activeSubWindow()
+        if activeSubWindow:
+            return activeSubWindow.widget()
+        return None
 
     def setActiveSubWindow(self, window):
         if window:
