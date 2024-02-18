@@ -36,4 +36,9 @@ Usando a Biblioteca [QGraphicsView](https://doc.qt.io/qt-6/qgraphicsview.html) d
 - Base repository : [Here](https://github.com/baoboa/pyqt5)
 - Example - Main Window - [MDI](https://github.com/baoboa/pyqt5/tree/master/examples/mainwindows/mdi)
 
+## Qt Skin Generator
 
+- Qt Skin Generator - [Link](https://www.blenderfreak.com/products/qt-skin-generator/)
+- darkskin files - [Link](https://gitlab.com/pavel.krupala/pyqt-node-editor/tree/master/examples/example_calculator/qss)
+- Stylus language - [Link](http://stylus-lang.com/)
+ 

@@ -1,11 +1,15 @@
+import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from nodeeditor.utils import loadStylesheets
 from nodeeditor.node_editor_window import NodeEditorWindow
 from examples.example_calculator.calc_sub_window import CalculatorSubWindow
 from nodeeditor.utils import dumpException
 
+# images for the dark skin
+import examples.example_calculator.qss.nodeeditor_dark_resources
 
 class CalculatorWindow(NodeEditorWindow):
 
@@ -14,9 +18,21 @@ class CalculatorWindow(NodeEditorWindow):
         self.name_company = 'Blenderfreak'
         self.name_product = 'Calculator NodeEditor'
 
+        self.stylesheet_filename = os.path.join(os.path.dirname(__file__), 'qss/nodeeditor.qss')
+        loadStylesheets(
+            os.path.join(os.path.dirname(__file__), 'qss/nodeeditor-dark.qss'),
+            self.stylesheet_filename
+        )
+
         self.mdiArea = QMdiArea()
         self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+
+        self.mdiArea.setViewMode(QMdiArea.TabbedView)
+        self.mdiArea.setDocumentMode(True)
+        self.mdiArea.setTabsClosable(True)
+        self.mdiArea.setTabsMovable(True)
+
         self.setCentralWidget(self.mdiArea)
 
         self.mdiArea.subWindowActivated.connect(self.updateMenus)
