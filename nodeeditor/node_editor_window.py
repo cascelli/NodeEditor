@@ -13,8 +13,6 @@ class NodeEditorWindow(QMainWindow):
         self.name_company = 'Blenderfreak'
         self.name_product = 'NodeEditor'
 
-        # self.filename = None
-
         self.initUI()
 
     def initUI(self):
@@ -55,9 +53,7 @@ class NodeEditorWindow(QMainWindow):
         self.actPaste = QAction('&Paste', self, shortcut='Ctrl+V', statusTip='Paste from clipboard', triggered=self.onEditPaste)
         self.actDelete = QAction('&Delete', self, shortcut='Del', statusTip='Delete selected items', triggered=self.onEditDelete)
 
-
     def createMenus(self):
-
         menubar = self.menuBar()
 
         # initialize menu
@@ -118,33 +114,30 @@ class NodeEditorWindow(QMainWindow):
 
     def onFileNew(self):
         if self.maybeSave():
-            self.getCurrentNodeEditorWidget().scene.clear()
-            self.filename = None
+            self.getCurrentNodeEditorWidget().fileNew()
             self.setTitle()
 
     def onFileOpen(self):
         if self.maybeSave():
             fname, filter = QFileDialog.getOpenFileName(self, 'Open graph from file')
-            if fname == '':
-                return
-            if os.path.isfile(fname):
-                self.getCurrentNodeEditorWidget().scene.loadFromFile(fname)
-                self.filename = fname
+            if fname != '' and os.path.isFile(fname):
+                self.getCurrentNodeEditorWidget().fileLoad(fname)
                 self.setTitle()
 
     def onFileSave(self):
-        if self.filename is None: return self.onFileSaveAs()
-        self.getCurrentNodeEditorWidget().scene.saveToFile(self.filename)
-        self.statusBar().showMessage("Successfully saved %s" % self.filename)
+        if self.getCurrentNodeEditorWidget().filename is None: return self.onFileSaveAs()
+        self.getCurrentNodeEditorWidget().fileSave()
+        self.statusBar().showMessage("Successfully saved %s" % self.getCurrentNodeEditorWidget().filename)
+        self.setTitle()
         return True
 
     def onFileSaveAs(self):
         fname, filter = QFileDialog.getSaveFileName(self, 'Save graph to file')
-
         if fname == '':
             return False
-        self.filename = fname
-        self.onFileSave()
+        self.getCurrentNodeEditorWidget().fileSave(fname)
+        self.statusBar().showMessage("Successfully saved as %s" % self.getCurrentNodeEditorWidget().filename)
+        self.setTitle()
         return True
 
     def onEditUndo(self):
