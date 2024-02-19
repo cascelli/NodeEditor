@@ -1,6 +1,9 @@
 import traceback
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+from pprint import PrettyPrinter
+
+pp = PrettyPrinter(indent=4).pprint
 
 
 def dumpException(e):
@@ -14,6 +17,7 @@ def loadStylesheet(filename):
     file.open(QFile.ReadOnly | QFile.Text)
     stylesheet = file.readAll()
     QApplication.instance().setStyleSheet(str(stylesheet, encoding='utf-8'))
+
 
 def loadStylesheets(*args):
     res = ''

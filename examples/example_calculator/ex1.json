@@ -1,0 +1,138 @@
+{
+    "id": 1370815257040,
+    "scene_width": 64000,
+    "scene_height": 64000,
+    "nodes": [
+        {
+            "id": 1208934222480,
+            "title": "My Awesome Node 1",
+            "pos_x": 302.1806259155267,
+            "pos_y": -474.65271282196017,
+            "inputs": [
+                {
+                    "id": 1208955006640,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 0
+                },
+                {
+                    "id": 1208955006688,
+                    "index": 1,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 2
+                },
+                {
+                    "id": 1208955013728,
+                    "index": 2,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 3
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 1208955013824,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 3,
+                    "socket_type": 1
+                }
+            ],
+            "content": {}
+        },
+        {
+            "id": 1208934244752,
+            "title": "My Awesome Node 2",
+            "pos_x": 665.8259916305537,
+            "pos_y": -290.2872838973999,
+            "inputs": [
+                {
+                    "id": 1208955014112,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 0
+                },
+                {
+                    "id": 1208955014160,
+                    "index": 1,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 2
+                },
+                {
+                    "id": 1208955014256,
+                    "index": 2,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 5
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 1208955014352,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 3,
+                    "socket_type": 1
+                }
+            ],
+            "content": {}
+        },
+        {
+            "id": 1208934244800,
+            "title": "My Awesome Node 3",
+            "pos_x": 933.1658287048334,
+            "pos_y": -517.4209852218628,
+            "inputs": [
+                {
+                    "id": 1208955014640,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 0
+                },
+                {
+                    "id": 1208955014688,
+                    "index": 1,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 0
+                },
+                {
+                    "id": 1208955014784,
+                    "index": 2,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 1208955014880,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 3,
+                    "socket_type": 1
+                }
+            ],
+            "content": {}
+        }
+    ],
+    "edges": [
+        {
+            "id": 1208955014064,
+            "edge_type": 2,
+            "start": 1208955013824,
+            "end": 1208955014112
+        },
+        {
+            "id": 1208955014592,
+            "edge_type": 2,
+            "start": 1208955014352,
+            "end": 1208955014784
+        }
+    ]
+}
