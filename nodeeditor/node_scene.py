@@ -29,6 +29,11 @@ class Scene(Serializable):
         self.history = SceneHistory(self)
         self.clipboard = SceneClipboard(self)
 
+    def isModified(self):
+        return self.has_been_modified
+
+    def getSelectedItems(self):
+        return self.grScene.selectedItems()
 
     @property
     def has_been_modified(self):

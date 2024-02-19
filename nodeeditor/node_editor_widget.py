@@ -26,18 +26,27 @@ class NodeEditorWidget(QWidget):
         self.scene = Scene()
         # self.grScene = self.scene.grScene
 
-        # create nodes
-        self.addNodes()
-
         # Create graphics view
         self.view = QDMGraphicsView(self.scene.grScene, self)
         self.layout.addWidget(self.view)
 
     def isModified(self):
-        return self.scene.has_been_modified
+        return self.scene.isModified()
 
     def isFilenameSet(self):
         return self.filename is not None
+
+    def getSelectedItems(self):
+        return self.scene.getSelectedItems()
+
+    def hasSelectedItems(self):
+        return self.getSelectedItems() != []
+
+    def canUndo(self):
+        return self.scene.history.canUndo()
+
+    def canRedo(self):
+        return self.scene.history.canRedo()
 
     def getUserFriendlyFilename(self):
         name = os.path.basename(self.filename) if self.isFilenameSet() else "New Graph"
@@ -46,13 +55,16 @@ class NodeEditorWidget(QWidget):
     def fileNew(self):
         self.scene.clear()
         self.filename = None
+        self.scene.history.clear()
+        self.scene.history.storeInitialHistoryStamp()
 
     def fileLoad(self, filename):
         QApplication.setOverrideCursor(Qt.WaitCursor)
         try:
             self.scene.loadFromFile(filename)
             self.filename = filename
-            # clear history
+            self.scene.history.clear()
+            self.scene.history.storeInitialHistoryStamp()
             return True
         except InvalidFile as e:
             print(e)
@@ -82,6 +94,8 @@ class NodeEditorWidget(QWidget):
 
         edge1 = Edge(self.scene, node1.outputs[0], node2.inputs[0], edge_type=EDGE_TYPE_BEZIER)
         edge2 = Edge(self.scene, node2.outputs[0], node3.inputs[2], edge_type=EDGE_TYPE_BEZIER)
+
+        self.scene.history.storeInitialHistoryStamp()
 
     def addDebugContent(self):
         greenBrush = QBrush(Qt.green)
