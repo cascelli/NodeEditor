@@ -40,9 +40,10 @@ class QDMGraphicsEdge(QGraphicsPathItem):
         self._pen.setWidthF(2.0)
         self._pen_selected.setWidthF(2.0)
         self._pen_dragging.setWidthF(2.0)
+
     def onSelected(self):
-        # print("grEdge onSelected")
         self.edge.scene.grScene.itemSelected.emit()
+
     def mouseReleaseEvent(self, event):
         super().mouseReleaseEvent(event)
         if self._last_selected_state != self.isSelected():
