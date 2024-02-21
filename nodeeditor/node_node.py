@@ -20,10 +20,11 @@ class Node(Serializable):
         self.scene.addNode(self)
         self.scene.grScene.addItem(self.grNode)
 
-        # create sockets for inputs and outputs
+        # create socket for inputs and outputs
         self.inputs = []
         self.outputs = []
         self.initSockets(inputs, outputs)
+
 
     def initInnerClasses(self):
         self.content = QDMNodeContentWidget(self)
@@ -38,13 +39,13 @@ class Node(Serializable):
         self.output_multi_edged = True
 
     def initSockets(self, inputs, outputs, reset=True):
-        """ Create sockets for inputs and outputs """
+        """ Create sockets for inputs and outputs"""
 
         if reset:
             # clear old sockets
-            if hasattr(self, 'inputs') and hasattr(self,'outputs'):
-                # remove grSockets from the scene
-                for socket in (self.inputs + self.outputs):
+            if hasattr(self, 'inputs') and hasattr(self, 'outputs'):
+                # remove grSockets from scene
+                for socket in (self.inputs+self.outputs):
                     self.scene.grScene.removeItem(socket.grSocket)
                 self.inputs = []
                 self.outputs = []
@@ -55,7 +56,7 @@ class Node(Serializable):
             socket = Socket(node=self, index=counter, position=self.input_socket_position,
                             socket_type=item, multi_edges=self.input_multi_edged,
                             count_on_this_node_side=len(inputs), is_input=True
-                            )
+            )
             counter += 1
             self.inputs.append(socket)
 
@@ -64,16 +65,17 @@ class Node(Serializable):
             socket = Socket(node=self, index=counter, position=self.output_socket_position,
                             socket_type=item, multi_edges=self.output_multi_edged,
                             count_on_this_node_side=len(outputs), is_input=False
-                            )
+            )
             counter += 1
             self.outputs.append(socket)
 
+
     def __str__(self):
-        return"<Node %s..%s>" % (hex(id(self))[2:5], hex(id(self))[-3:])
+        return "<Node %s..%s>" % (hex(id(self))[2:5], hex(id(self))[-3:])
 
     @property
     def pos(self):
-        return self.grNode.pos()    # QPointF
+        return self.grNode.pos()        # QPointF
 
     def setPos(self, x, y):
         self.grNode.setPos(x, y)
@@ -102,9 +104,9 @@ class Node(Serializable):
             new_top = available_height - total_height_of_all_sockets
 
             # y = top_offset + index * self.socket_spacing + new_top / 2
-            y = top_offset + available_height / 2.0 + (index - 0.5) * self.socket_spacing
+            y = top_offset + available_height/2.0 + (index-0.5)*self.socket_spacing
             if num_sockets > 1:
-                y -= self.socket_spacing * (num_sockets -1) / 2
+                y -= self.socket_spacing * (num_sockets-1)/2
 
         elif position in (LEFT_TOP, RIGHT_TOP):
             # start from top
@@ -115,19 +117,21 @@ class Node(Serializable):
 
         return [x, y]
 
+
     def updateConnectedEdges(self):
-        for socket in self.inputs + self.outputs: # Groups arrays of inputs and outputs
+        for socket in self.inputs + self.outputs:
             # if socket.hasEdge():
             for edge in socket.edges:
                 edge.updatePositions()
 
+
     def remove(self):
         if DEBUG: print("> Removing Node", self)
         if DEBUG: print(" - remove all edges from sockets")
-        for socket in (self.inputs + self.outputs):
-            # if socket .hasEdge():
+        for socket in (self.inputs+self.outputs):
+            # if socket.hasEdge():
             for edge in socket.edges:
-                if DEBUG: print("      - removing from socket:", socket, "edge", edge)
+                if DEBUG: print("    - removing from socket:", socket, "edge:", edge)
                 edge.remove()
         if DEBUG: print(" - remove grNode")
         self.scene.grScene.removeItem(self.grNode)
@@ -140,7 +144,7 @@ class Node(Serializable):
         inputs, outputs = [], []
         for socket in self.inputs: inputs.append(socket.serialize())
         for socket in self.outputs: outputs.append(socket.serialize())
-        return OrderedDict ([
+        return OrderedDict([
             ('id', self.id),
             ('title', self.title),
             ('pos_x', self.grNode.scenePos().x()),
@@ -158,10 +162,10 @@ class Node(Serializable):
             self.setPos(data['pos_x'], data['pos_y'])
             self.title = data['title']
 
-            data['inputs'].sort(key=lambda socket: socket['index'] + socket['position'] * 10000)
-            data['outputs'].sort(key=lambda socket: socket['index'] + socket['position'] * 10000)
-            num_inputs = len(data['inputs'])
-            num_outputs = len(data['outputs'])
+            data['inputs'].sort(key=lambda socket: socket['index'] + socket['position'] * 10000 )
+            data['outputs'].sort(key=lambda socket: socket['index'] + socket['position'] * 10000 )
+            num_inputs = len( data['inputs'] )
+            num_outputs = len( data['outputs'] )
 
             self.inputs = []
             for socket_data in data['inputs']:
@@ -175,12 +179,12 @@ class Node(Serializable):
             for socket_data in data['outputs']:
                 new_socket = Socket(node=self, index=socket_data['index'], position=socket_data['position'],
                                     socket_type=socket_data['socket_type'], count_on_this_node_side=num_outputs,
-                                    is_input=False
-                                    )
+                                    is_input=False)
                 new_socket.deserialize(socket_data, hashmap, restore_id)
                 self.outputs.append(new_socket)
-
-            # print(hashmap)
         except Exception as e: dumpException(e)
 
-        return True
+        # also deseralize the content of the node
+        res = self.content.deserialize(data['content'], hashmap)
+
+        return True & res

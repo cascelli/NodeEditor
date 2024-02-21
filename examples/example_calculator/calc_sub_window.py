@@ -5,28 +5,34 @@ from nodeeditor.node_editor_widget import NodeEditorWidget
 from examples.example_calculator.calc_node_base import *
 from nodeeditor.utils import dumpException
 
-
 DEBUG = False
 
 
 class CalculatorSubWindow(NodeEditorWidget):
     def __init__(self):
         super().__init__()
-        self.setAttribute((Qt.WA_DeleteOnClose))
+        self.setAttribute(Qt.WA_DeleteOnClose)
 
         self.setTitle()
 
         self.scene.addHasBeenModifiedListener(self.setTitle)
         self.scene.addDragEnterListener(self.onDragEnter)
         self.scene.addDropListener(self.onDrop)
+        self.scene.setNodeClassSelector(self.getNodeClassFromData)
 
         self._close_event_listeners = []
+
+
+    def getNodeClassFromData(self, data):
+        if 'op_code' not in data: return Node
+        return get_class_from_opcode(data['op_code'])
 
     def setTitle(self):
         self.setWindowTitle(self.getUserFriendlyFilename())
 
     def addCloseEventListener(self, callback):
         self._close_event_listeners.append(callback)
+
     def closeEvent(self, event):
         for callback in self._close_event_listeners: callback(self, event)
 
@@ -34,7 +40,7 @@ class CalculatorSubWindow(NodeEditorWidget):
         if event.mimeData().hasFormat(LISTBOX_MIMETYPE):
             event.acceptProposedAction()
         else:
-            print("  ... denied drag enter event")
+            # print(" ... denied drag enter event")
             event.setAccepted(False)
 
     def onDrop(self, event):
@@ -57,9 +63,10 @@ class CalculatorSubWindow(NodeEditorWidget):
                 self.scene.history.storeHistory("Created node %s" % node.__class__.__name__)
             except Exception as e: dumpException(e)
 
+
             event.setDropAction(Qt.MoveAction)
             event.accept()
-
         else:
-            # print("  ... drop ignored, not requested format '%s'" % LISTBOX_MIMETYPE)
+            # print(" ... drop ignored, not requested format '%s'" % LISTBOX_MIMETYPE)
             event.ignore()
+

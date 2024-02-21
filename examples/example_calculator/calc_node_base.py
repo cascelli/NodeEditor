@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import *
-
 from nodeeditor.node_node import Node
 from nodeeditor.node_content_widget import QDMNodeContentWidget
 from nodeeditor.node_graphics_node import QDMGraphicsNode
@@ -16,10 +15,12 @@ class CalcGraphicsNode(QDMGraphicsNode):
         self.title_horizontal_padding = 8
         self.title_vertical_padding = 10
 
+
 class CalcContent(QDMNodeContentWidget):
     def initUI(self):
         lbl = QLabel(self.node.content_label, self)
         lbl.setObjectName(self.node.content_label_objname)
+
 
 class CalcNode(Node):
     icon = ""
@@ -27,6 +28,7 @@ class CalcNode(Node):
     op_title = "Undefined"
     content_label = ""
     content_label_objname = "calc_node_bg"
+
     def __init__(self, scene, inputs=[2,2], outputs=[1]):
         super().__init__(scene, self.__class__.op_title, inputs, outputs)
 
@@ -38,3 +40,13 @@ class CalcNode(Node):
         super().initSettings()
         self.input_socket_position = LEFT_CENTER
         self.output_socket_position = RIGHT_CENTER
+
+    def serialize(self):
+        res = super().serialize()
+        res['op_code'] = self.__class__.op_code
+        return res
+
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap, restore_id)
+        print("Deserialized CalcNode '%s'" % self.__class__.__name__, "res:", res)
+        return res

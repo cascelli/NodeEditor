@@ -12,12 +12,12 @@ class QDMNodeContentWidget(QWidget, Serializable):
 
     def initUI(self):
         self.layout = QVBoxLayout()
-        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setContentsMargins(0,0,0,0)
         self.setLayout(self.layout)
 
         self.wdg_label = QLabel("Some Title")
         self.layout.addWidget(self.wdg_label)
-        self.layout.addWidget(QDMTextEdit("Foo"))
+        self.layout.addWidget(QDMTextEdit("foo"))
 
     def setEditingFlag(self, value):
         self.node.scene.grScene.views()[0].editingFlag = value
@@ -28,20 +28,13 @@ class QDMNodeContentWidget(QWidget, Serializable):
         ])
 
     def deserialize(self, data, hashmap={}):
-        return False
+        return True
 
 class QDMTextEdit(QTextEdit):
-    # def keyPressEvent(self, event):
-    #     print("QDMTextEdit -- KEY PRESS")
-    #     # event.ignore()  # to stop propagation event from bottom to top objects
-    #     super().keyPressEvent(event)
-
     def focusInEvent(self, event):
-        # print("Focus In")
         self.parentWidget().setEditingFlag(True)
         super().focusInEvent(event)
 
     def focusOutEvent(self, event):
-        # print("Focus Out")
         self.parentWidget().setEditingFlag(False)
         super().focusOutEvent(event)
