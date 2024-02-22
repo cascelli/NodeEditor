@@ -9,12 +9,13 @@ from examples.example_calculator.calc_sub_window import CalculatorSubWindow
 from nodeeditor.utils import dumpException, pp
 from examples.example_calculator.calc_drag_listbox import QDMDragListBox
 from examples.example_calculator.calc_conf import *
-from examples.example_calculator.calc_conf_nodes import *
+
 
 # images for the dark skin
 import examples.example_calculator.qss.nodeeditor_dark_resources
 
 DEBUG = False
+
 
 
 class CalculatorWindow(NodeEditorWindow):
