@@ -31,6 +31,17 @@ class CalculatorSubWindow(NodeEditorWidget):
         if 'op_code' not in data: return Node
         return get_class_from_opcode(data['op_code'])
 
+
+    def fileLoad(self, filename):
+        if super().fileLoad(filename):
+            # eval all output nodes
+            for node in self.scene.nodes:
+                if node.__class__.__name__ == "CalcNode_Output":
+                    node.eval()
+            return True
+
+        return False
+
     def initNewNodeActions(self):
         self.node_actions = {}
         keys = list(CALC_NODES.keys())
