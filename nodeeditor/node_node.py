@@ -73,6 +73,7 @@ class Node(Serializable):
             counter += 1
             self.outputs.append(socket)
 
+
     def onEdgeConnectionChanged(self, new_edge):
         print("%s::onEdgeConnectionChanged" % self.__class__.__name__, new_edge)
 
@@ -151,6 +152,7 @@ class Node(Serializable):
         self.scene.removeNode(self)
         if DEBUG: print(" - everything was done.")
 
+
     # node evaluation stuff
 
     def isDirty(self):
@@ -198,7 +200,9 @@ class Node(Serializable):
         for node in self.getChildrenNodes():
             node.eval()
 
-    # traversing node functions
+
+    # traversing nodes functions
+
     def getChildrenNodes(self):
         if self.outputs == []: return []
         other_nodes = []
@@ -208,7 +212,37 @@ class Node(Serializable):
                 other_nodes.append(other_node)
         return other_nodes
 
+
+    def getInput(self, index=0):
+        try:
+            edge = self.inputs[index].edges[0]
+            socket = edge.getOtherSocket(self.inputs[index])
+            return socket.node
+        except IndexError:
+            print("EXC: Trying to get input, but none is attached to", self)
+            return None
+        except Exception as e:
+            dumpException(e)
+            return None
+
+
+    def getInputs(self, index=0):
+        ins = []
+        for edge in self.inputs[index].edges:
+            other_socket = edge.getOtherSocket(self.inputs[index])
+            ins.append(other_socket.node)
+        return ins
+
+    def getOutputs(self, index=0):
+        outs = []
+        for edge in self.outputs[index].edges:
+            other_socket = edge.getOtherSocket(self.outputs[index])
+            outs.append(other_socket.node)
+        return outs
+
+
     # serialization functions
+
     def serialize(self):
         inputs, outputs = [], []
         for socket in self.inputs: inputs.append(socket.serialize())

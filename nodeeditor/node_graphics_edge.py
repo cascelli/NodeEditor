@@ -1,8 +1,8 @@
 import math
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+
 
 from nodeeditor.node_socket import *
 
@@ -32,7 +32,7 @@ class QDMGraphicsEdge(QGraphicsPathItem):
 
     def initAssets(self):
         self._color = QColor("#001000")
-        self._color_selected = QColor("#00FF00")
+        self._color_selected = QColor("#00ff00")
         self._pen = QPen(self._color)
         self._pen_selected = QPen(self._color_selected)
         self._pen_dragging = QPen(self._color)
@@ -80,7 +80,7 @@ class QDMGraphicsEdge(QGraphicsPathItem):
         return cutpath.intersects(path)
 
     def calcPath(self):
-        # Will handle drawing QPainterPath from point A to B
+        """ Will handle drawing QPainterPath from Point A to B """
         raise NotImplemented("This method has to be overriden in a child class")
 
 
@@ -97,17 +97,15 @@ class QDMGraphicsEdgeBezier(QDMGraphicsEdge):
         d = self.posDestination
         dist = (d[0] - s[0]) * 0.5
 
-        # if s[0] > d[0]: dist *= -1
         cpx_s = +dist
         cpx_d = -dist
         cpy_s = 0
         cpy_d = 0
 
         if self.edge.start_socket is not None:
-
             sspos = self.edge.start_socket.position
 
-            if (s[0] > d[0] and sspos in(RIGHT_TOP, RIGHT_BOTTOM)) or (s[0] < d[0] and sspos in(LEFT_BOTTOM, LEFT_TOP)):
+            if (s[0] > d[0] and sspos in (RIGHT_TOP, RIGHT_BOTTOM)) or (s[0] < d[0] and sspos in (LEFT_BOTTOM, LEFT_TOP)):
                 cpx_d *= -1
                 cpx_s *= -1
 
@@ -116,29 +114,14 @@ class QDMGraphicsEdgeBezier(QDMGraphicsEdge):
                         (s[1] - d[1]) if (s[1] - d[1]) != 0 else 0.00001
                     )
                 ) * EDGE_CP_ROUNDNESS
-
                 cpy_s = (
                     (d[1] - s[1]) / math.fabs(
                         (d[1] - s[1]) if (d[1] - s[1]) != 0 else 0.00001
                     )
                 ) * EDGE_CP_ROUNDNESS
 
+
         path = QPainterPath(QPointF(self.posSource[0], self.posSource[1]))
-        # path.cubicTo(
-        #     s[0] + dist,
-        #     s[1],
-        #     d[0] - dist,
-        #     d[1],
-        #     self.posDestination[0],
-        #     self.posDestination[1]
-        # )
-        path.cubicTo(
-            s[0] + cpx_s,
-            s[1] + cpy_s,
-            d[0] + cpx_d,
-            d[1] + cpy_d,
-            self.posDestination[0],
-            self.posDestination[1]
-        )
+        path.cubicTo( s[0] + cpx_s, s[1] + cpy_s, d[0] + cpx_d, d[1] + cpy_d, self.posDestination[0], self.posDestination[1])
 
         return path

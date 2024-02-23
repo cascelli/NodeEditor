@@ -1,4 +1,5 @@
 from nodeeditor.node_graphics_edge import QDMGraphicsEdge
+
 from nodeeditor.utils import dumpException
 
 DEBUG = False
@@ -23,6 +24,9 @@ class SceneHistory():
     def canUndo(self):
         return self.history_current_step > 0
 
+    def canRedo(self):
+        return self.history_current_step + 1 < len(self.history_stack)
+
     def undo(self):
         if DEBUG: print("UNDO")
 
@@ -30,9 +34,6 @@ class SceneHistory():
             self.history_current_step -= 1
             self.restoreHistory()
             self.scene.has_been_modified = True
-
-    def canRedo(self):
-        return self.history_current_step + 1 < len(self.history_stack)
 
     def redo(self):
         if DEBUG: print("REDO")
@@ -51,6 +52,7 @@ class SceneHistory():
                         "(%d)" % len(self.history_stack))
         self.restoreHistoryStamp(self.history_stack[self.history_current_step])
         for callback in self._history_modified_listeners: callback()
+
 
     def storeHistory(self, desc, setModified=False):
         if setModified:
@@ -75,15 +77,15 @@ class SceneHistory():
         self.history_current_step += 1
         if DEBUG: print("  -- setting step to:", self.history_current_step)
 
-        # always trigger history modified (for i.e., updateEditMenu)
+        # always trigger history modified (for i.e. updateEditMenu)
         for callback in self._history_modified_listeners: callback()
+
 
     def createHistoryStamp(self, desc):
         sel_obj = {
             'nodes': [],
-            'edges': []
+            'edges': [],
         }
-
         for item in self.scene.grScene.selectedItems():
             if hasattr(item, 'node'):
                 sel_obj['nodes'].append(item.node.id)
@@ -93,8 +95,9 @@ class SceneHistory():
         history_stamp = {
             'desc': desc,
             'snapshot': self.scene.serialize(),
-            'selection': sel_obj
+            'selection': sel_obj,
         }
+
         return history_stamp
 
     def restoreHistoryStamp(self, history_stamp):
@@ -112,7 +115,7 @@ class SceneHistory():
 
             for node_id in history_stamp['selection']['nodes']:
                 for node in self.scene.nodes:
-                    if node_id == node_id:
+                    if node.id == node_id:
                         node.grNode.setSelected(True)
                         break
 

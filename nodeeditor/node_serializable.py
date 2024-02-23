@@ -7,4 +7,3 @@ class Serializable():
 
     def deserialize(self, data, hashmap={}):
         raise NotImplemented()
-

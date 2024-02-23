@@ -88,7 +88,7 @@ class SceneClipboard():
 
         # center = view.mapToScene(view.rect().center())
 
-        # calculate the offset of the newly creating nodes
+        # calculate tehe offset of the newly creating nodes
         offset_x = mouse_scene_pos.x() - bbox_center_x
         offset_y = mouse_scene_pos.y() - bbox_center_y
 

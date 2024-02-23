@@ -7,9 +7,10 @@ OP_NODE_SUB = 4
 OP_NODE_MUL = 5
 OP_NODE_DIV = 6
 
-CALC_NODES = {
 
+CALC_NODES = {
 }
+
 
 class ConfException(Exception): pass
 class InvalidNodeRegistration(ConfException): pass
@@ -24,7 +25,6 @@ def register_node_now(op_code, class_reference):
     CALC_NODES[op_code] = class_reference
 
 
-# register a class with a decorator
 def register_node(op_code):
     def decorator(original_class):
         register_node_now(op_code, original_class)
@@ -34,6 +34,7 @@ def register_node(op_code):
 def get_class_from_opcode(op_code):
     if op_code not in CALC_NODES: raise OpCodeNotRegistered("OpCode '%d' is not registered" % op_code)
     return CALC_NODES[op_code]
+
 
 
 # import all nodes and register them

@@ -6,7 +6,7 @@ from examples.example_calculator.calc_conf import *
 from nodeeditor.utils import dumpException
 
 
-class QDMDragListBox(QListWidget):
+class QDMDragListbox(QListWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.initUI()
@@ -19,6 +19,7 @@ class QDMDragListBox(QListWidget):
 
         self.addMyItems()
 
+
     def addMyItems(self):
         keys = list(CALC_NODES.keys())
         keys.sort()
@@ -26,8 +27,9 @@ class QDMDragListBox(QListWidget):
             node = get_class_from_opcode(key)
             self.addMyItem(node.op_title, node.icon, node.op_code)
 
+
     def addMyItem(self, name, icon=None, op_code=0):
-        item = QListWidgetItem(name, self) # can be ( icon, test, parent, <imnt>type )
+        item = QListWidgetItem(name, self) # can be (icon, text, parent, <int>type)
         pixmap = QPixmap(icon if icon is not None else ".")
         item.setIcon(QIcon(pixmap))
         item.setSizeHint(QSize(32, 32))
@@ -38,12 +40,14 @@ class QDMDragListBox(QListWidget):
         item.setData(Qt.UserRole, pixmap)
         item.setData(Qt.UserRole + 1, op_code)
 
-    def startDrag(self, *args, **kvargs):
+
+    def startDrag(self, *args, **kwargs):
         try:
             item = self.currentItem()
             op_code = item.data(Qt.UserRole + 1)
 
             pixmap = QPixmap(item.data(Qt.UserRole))
+
 
             itemData = QByteArray()
             dataStream = QDataStream(itemData, QIODevice.WriteOnly)

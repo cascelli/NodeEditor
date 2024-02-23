@@ -6,16 +6,14 @@ from PyQt5.QtCore import *
 from nodeeditor.utils import loadStylesheets
 from nodeeditor.node_editor_window import NodeEditorWindow
 from examples.example_calculator.calc_sub_window import CalculatorSubWindow
+from examples.example_calculator.calc_drag_listbox import QDMDragListbox
 from nodeeditor.utils import dumpException, pp
-from examples.example_calculator.calc_drag_listbox import QDMDragListBox
 from examples.example_calculator.calc_conf import *
-
 
 # images for the dark skin
 import examples.example_calculator.qss.nodeeditor_dark_resources
 
 DEBUG = False
-
 
 
 class CalculatorWindow(NodeEditorWindow):
@@ -33,8 +31,9 @@ class CalculatorWindow(NodeEditorWindow):
         self.empty_icon = QIcon(".")
 
         if DEBUG:
-            print("registered nodes:")
+            print("Registered nodes:")
             pp(CALC_NODES)
+
 
         self.mdiArea = QMdiArea()
         self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
@@ -69,6 +68,7 @@ class CalculatorWindow(NodeEditorWindow):
             self.writeSettings()
             event.accept()
 
+
     def createActions(self):
         super().createActions()
 
@@ -97,6 +97,7 @@ class CalculatorWindow(NodeEditorWindow):
             subwnd.widget().fileNew()
             subwnd.show()
         except Exception as e: dumpException(e)
+
 
     def onFileOpen(self):
         fnames, filter = QFileDialog.getOpenFileNames(self, 'Open graph from file')
@@ -171,8 +172,9 @@ class CalculatorWindow(NodeEditorWindow):
 
             self.actUndo.setEnabled(hasMdiChild and active.canUndo())
             self.actRedo.setEnabled(hasMdiChild and active.canRedo())
+        except Exception as e: dumpException(e)
 
-        except Exception as e: dumpException()
+
 
     def updateWindowMenu(self):
         self.windowMenu.clear()
@@ -220,7 +222,7 @@ class CalculatorWindow(NodeEditorWindow):
         pass
 
     def createNodesDock(self):
-        self.nodesListWidget = QDMDragListBox()
+        self.nodesListWidget = QDMDragListbox()
 
         self.nodesDock = QDockWidget("Nodes")
         self.nodesDock.setWidget(self.nodesListWidget)
@@ -236,7 +238,7 @@ class CalculatorWindow(NodeEditorWindow):
         subwnd = self.mdiArea.addSubWindow(nodeeditor)
         subwnd.setWindowIcon(self.empty_icon)
         # nodeeditor.scene.addItemSelectedListener(self.updateEditMenu)
-        # nodeeditor.scene.addItemDeselectedListener(self.updateEditMenu)
+        # nodeeditor.scene.addItemsDeselectedListener(self.updateEditMenu)
         nodeeditor.scene.history.addHistoryModifiedListener(self.updateEditMenu)
         nodeeditor.addCloseEventListener(self.onSubWndClose)
         return subwnd
@@ -250,11 +252,13 @@ class CalculatorWindow(NodeEditorWindow):
         else:
             event.ignore()
 
+
     def findMdiChild(self, filename):
         for window in self.mdiArea.subWindowList():
             if window.widget().filename == filename:
                 return window
         return None
+
 
     def setActiveSubWindow(self, window):
         if window:

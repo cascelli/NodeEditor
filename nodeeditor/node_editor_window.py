@@ -15,6 +15,7 @@ class NodeEditorWindow(QMainWindow):
 
         self.initUI()
 
+
     def initUI(self):
         self.createActions()
         self.createMenus()
@@ -51,6 +52,7 @@ class NodeEditorWindow(QMainWindow):
         self.actPaste = QAction('&Paste', self, shortcut='Ctrl+V', statusTip="Paste from clipboard", triggered=self.onEditPaste)
         self.actDelete = QAction('&Delete', self, shortcut='Del', statusTip="Delete selected items", triggered=self.onEditDelete)
 
+
     def createMenus(self):
         menubar = self.menuBar()
 
@@ -78,6 +80,7 @@ class NodeEditorWindow(QMainWindow):
         title += self.getCurrentNodeEditorWidget().getUserFriendlyFilename()
 
         self.setWindowTitle(title)
+
 
     def closeEvent(self, event):
         if self.maybeSave():
@@ -107,6 +110,8 @@ class NodeEditorWindow(QMainWindow):
 
         return True
 
+
+
     def onScenePosChanged(self, x, y):
         self.status_mouse_pos.setText("Scene Pos: [%d, %d]" % (x, y))
 
@@ -114,6 +119,7 @@ class NodeEditorWindow(QMainWindow):
         if self.maybeSave():
             self.getCurrentNodeEditorWidget().fileNew()
             self.setTitle()
+
 
     def onFileOpen(self):
         if self.maybeSave():

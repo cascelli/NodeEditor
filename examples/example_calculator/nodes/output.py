@@ -4,12 +4,12 @@ from examples.example_calculator.calc_node_base import *
 from nodeeditor.utils import dumpException
 
 
-
 class CalcOutputContent(QDMNodeContentWidget):
     def initUI(self):
         self.lbl = QLabel("42", self)
         self.lbl.setAlignment(Qt.AlignLeft)
         self.lbl.setObjectName(self.node.content_label_objname)
+
 
 @register_node(OP_NODE_OUTPUT)
 class CalcNode_Output(CalcNode):
@@ -24,3 +24,24 @@ class CalcNode_Output(CalcNode):
     def initInnerClasses(self):
         self.content = CalcOutputContent(self)
         self.grNode = CalcGraphicsNode(self)
+
+    def evalImplementation(self):
+        input_node = self.getInput(0)
+        if not input_node:
+            self.grNode.setToolTip("Input is not connected")
+            self.markInvalid()
+            return
+
+        val = input_node.eval()
+
+        if not val:
+            self.grNode.setToolTip("Input is NaN")
+            self.markInvalid()
+            return
+
+        self.content.lbl.setText("%d" % val)
+        self.markInvalid(False)
+        self.markDirty(False)
+        self.grNode.setToolTip("")
+
+        return val

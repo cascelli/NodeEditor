@@ -3,10 +3,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 
+
 class QDMGraphicsNode(QGraphicsItem):
     def __init__(self, node, parent=None):
         super().__init__(parent)
-
         self.node = node
         self.content = self.node.content
 
@@ -57,7 +57,6 @@ class QDMGraphicsNode(QGraphicsItem):
         for node in self.scene().scene.nodes:
             if node.grNode.isSelected():
                 node.updateConnectedEdges()
-
         self._was_moved = True
 
     def mouseReleaseEvent(self, event):
@@ -71,13 +70,13 @@ class QDMGraphicsNode(QGraphicsItem):
             self.node.scene.resetLastSelectedStates()
             self._last_selected_state = True
 
-            # we need to store the last selected state,  because moving does also select the nodes
+            # we need to store the last selected state, because moving does also select the nodes
             self.node.scene._last_selected_items = self.node.scene.getSelectedItems()
 
             # now we want to skip storing selection
             return
 
-        # handle whe grNode was clicked on
+        # handle when grNode was clicked on
         if self._last_selected_state != self.isSelected() or self.node.scene._last_selected_items != self.node.scene.getSelectedItems():
             self.node.scene.resetLastSelectedStates()
             self._last_selected_state = self.isSelected()
@@ -85,11 +84,11 @@ class QDMGraphicsNode(QGraphicsItem):
 
     @property
     def title(self): return self._title
-
     @title.setter
     def title(self, value):
         self._title = value
         self.title_item.setPlainText(self._title)
+
 
     def boundingRect(self):
         return QRectF(
@@ -98,6 +97,7 @@ class QDMGraphicsNode(QGraphicsItem):
             self.width,
             self.height
         ).normalized()
+
 
     def initTitle(self):
         self.title_item = QGraphicsTextItem(self)
@@ -116,28 +116,29 @@ class QDMGraphicsNode(QGraphicsItem):
                                  self.width - 2 * self.edge_padding, self.height - 2 * self.edge_padding - self.title_height)
         self.grContent.setWidget(self.content)
 
+
     def paint(self, painter, QStyleOptionGraphicsItem, widget=None):
         # title
         path_title = QPainterPath()
         path_title.setFillRule(Qt.WindingFill)
         path_title.addRoundedRect(0, 0, self.width, self.title_height, self.edge_roundness, self.edge_roundness)
         path_title.addRect(0, self.title_height - self.edge_roundness, self.edge_roundness, self.edge_roundness)
-        path_title.addRect(self.width - self.edge_roundness, self.title_height - self.edge_roundness, self.edge_roundness,
-                           self.edge_roundness)
+        path_title.addRect(self.width - self.edge_roundness, self.title_height - self.edge_roundness, self.edge_roundness, self.edge_roundness)
         painter.setPen(Qt.NoPen)
         painter.setBrush(self._brush_title)
         painter.drawPath(path_title.simplified())
 
+
         # content
         path_content = QPainterPath()
         path_content.setFillRule(Qt.WindingFill)
-        path_content.addRoundedRect(0, self.title_height, self.width, self.height - self.title_height, self.edge_roundness,
-                                    self.edge_roundness)
+        path_content.addRoundedRect(0, self.title_height, self.width, self.height - self.title_height, self.edge_roundness, self.edge_roundness)
         path_content.addRect(0, self.title_height, self.edge_roundness, self.edge_roundness)
         path_content.addRect(self.width - self.edge_roundness, self.title_height, self.edge_roundness, self.edge_roundness)
         painter.setPen(Qt.NoPen)
         painter.setBrush(self._brush_background)
         painter.drawPath(path_content.simplified())
+
 
         # outline
         path_outline = QPainterPath()

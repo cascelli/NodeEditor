@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
 
 class QDMGraphicsSocket(QGraphicsItem):
@@ -16,9 +16,8 @@ class QDMGraphicsSocket(QGraphicsItem):
             QColor("#FF0056a6"),
             QColor("#FFa86db1"),
             QColor("#FFb54747"),
-            QColor("#FFdbe220")
+            QColor("#FFdbe220"),
         ]
-
         self._color_background = self._colors[socket_type]
         self._color_outline = QColor("#FF000000")
 
@@ -27,7 +26,6 @@ class QDMGraphicsSocket(QGraphicsItem):
         self._brush = QBrush(self._color_background)
 
     def paint(self, painter, QStyleOptionGraphicsItem, widget=None):
-
         # painting circle
         painter.setBrush(self._brush)
         painter.setPen(self._pen)
@@ -35,9 +33,8 @@ class QDMGraphicsSocket(QGraphicsItem):
 
     def boundingRect(self):
         return QRectF(
-            -self.radius - self.outline_width,
-            -self.radius - self.outline_width,
+            - self.radius - self.outline_width,
+            - self.radius - self.outline_width,
             2 * (self.radius + self.outline_width),
             2 * (self.radius + self.outline_width),
         )
-

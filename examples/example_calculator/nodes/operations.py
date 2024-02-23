@@ -12,6 +12,12 @@ class CalcNode_Add(CalcNode):
     content_label = "+"
     content_label_objname = "calc_node_bg"
 
+    def evalImplementation(self):
+        self.markInvalid(False)
+        self.markDirty(False)
+        return 123
+
+
 @register_node(OP_NODE_SUB)
 class CalcNode_Sub(CalcNode):
     icon = "icons/sub.png"

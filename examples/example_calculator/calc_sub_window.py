@@ -10,7 +10,6 @@ DEBUG = False
 DEBUG_CONTEXT = False
 
 
-
 class CalculatorSubWindow(NodeEditorWidget):
     def __init__(self):
         super().__init__()
@@ -26,6 +25,7 @@ class CalculatorSubWindow(NodeEditorWidget):
         self.scene.setNodeClassSelector(self.getNodeClassFromData)
 
         self._close_event_listeners = []
+
 
     def getNodeClassFromData(self, data):
         if 'op_code' not in data: return Node
@@ -103,7 +103,7 @@ class CalculatorSubWindow(NodeEditorWidget):
                 self.handleNodeContextMenu(event)
             elif hasattr(item, 'edge'):
                 self.handleEdgeContextMenu(event)
-            # elif item is None:
+            #elif item is None:
             else:
                 self.handleNewNodeContextMenu(event)
 
@@ -114,7 +114,7 @@ class CalculatorSubWindow(NodeEditorWidget):
         if DEBUG_CONTEXT: print("CONTEXT: NODE")
         context_menu = QMenu(self)
         markDirtyAct = context_menu.addAction("Mark Dirty")
-        markDirtyDescendantAct = context_menu.addAction("Mark Descendant Dirty")
+        markDirtyDescendantsAct = context_menu.addAction("Mark Descendant Dirty")
         markInvalidAct = context_menu.addAction("Mark Invalid")
         unmarkInvalidAct = context_menu.addAction("Unmark Invalid")
         evalAct = context_menu.addAction("Eval")
@@ -127,24 +127,24 @@ class CalculatorSubWindow(NodeEditorWidget):
 
         if hasattr(item, 'node'):
             selected = item.node
-
         if hasattr(item, 'socket'):
             selected = item.socket.node
 
         if DEBUG_CONTEXT: print("got item:", selected)
         if selected and action == markDirtyAct: selected.markDirty()
-        if selected and action == markDirtyDescendantAct: selected.markDescendantsDirty()
+        if selected and action == markDirtyDescendantsAct: selected.markDescendantsDirty()
         if selected and action == markInvalidAct: selected.markInvalid()
         if selected and action == unmarkInvalidAct: selected.markInvalid(False)
         if selected and action == evalAct:
             val = selected.eval()
             if DEBUG_CONTEXT: print("EVALUATED:", val)
 
+
     def handleEdgeContextMenu(self, event):
         if DEBUG_CONTEXT: print("CONTEXT: EDGE")
         context_menu = QMenu(self)
-        bezierAct = context_menu.addAction("Bezier edge")
-        directAct = context_menu.addAction("Direct edge")
+        bezierAct = context_menu.addAction("Bezier Edge")
+        directAct = context_menu.addAction("Direct Edge")
         action = context_menu.exec_(self.mapToGlobal(event.pos()))
 
         selected = None
@@ -154,6 +154,7 @@ class CalculatorSubWindow(NodeEditorWidget):
 
         if selected and action == bezierAct: selected.edge_type = EDGE_TYPE_BEZIER
         if selected and action == directAct: selected.edge_type = EDGE_TYPE_DIRECT
+
 
     def handleNewNodeContextMenu(self, event):
         if DEBUG_CONTEXT: print("CONTEXT: EMPTY SPACE")
@@ -165,3 +166,5 @@ class CalculatorSubWindow(NodeEditorWidget):
             scene_pos = self.scene.getView().mapToScene(event.pos())
             new_calc_node.setPos(scene_pos.x(), scene_pos.y())
             if DEBUG_CONTEXT: print("Selected node:", new_calc_node)
+
+

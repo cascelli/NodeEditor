@@ -35,6 +35,7 @@ class CalcGraphicsNode(QDMGraphicsNode):
             QRectF(offset, 0, 24.0, 24.0)
         )
 
+
 class CalcContent(QDMNodeContentWidget):
     def initUI(self):
         lbl = QLabel(self.node.content_label, self)
@@ -52,7 +53,8 @@ class CalcNode(Node):
         super().__init__(scene, self.__class__.op_title, inputs, outputs)
 
         self.value = None
-        # it's really important to mark all nodes dirty by default
+
+        # it's really important to mark all nodes Dirty by default
         self.markDirty()
 
     def initInnerClasses(self):
@@ -64,30 +66,34 @@ class CalcNode(Node):
         self.input_socket_position = LEFT_CENTER
         self.output_socket_position = RIGHT_CENTER
 
-
     def evalImplementation(self):
         return 123
 
     def eval(self):
         if not self.isDirty() and not self.isInvalid():
-            print(" _> return cached %s value:" % self.__class__.__name__, self.value)
+            print(" _> returning cached %s value:" % self.__class__.__name__, self.value)
             return self.value
 
         try:
-            val = self.evalImplementation()
-            self.markDirty(False)
-            self.markInvalid(False)
-            return val
 
+            val = self.evalImplementation()
+            return val
+        except ValueError as e:
+            self.markInvalid()
+            self.grNode.setToolTip(str(e))
+            self.markDescendantsDirty()
         except Exception as e:
             self.markInvalid()
+            self.grNode.setToolTip(str(e))
             dumpException(e)
+
 
 
     def onInputChanged(self, new_edge):
         print("%s::__onInputChanged" % self.__class__.__name__)
         self.markDirty()
         self.eval()
+
 
     def serialize(self):
         res = super().serialize()

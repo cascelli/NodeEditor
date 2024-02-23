@@ -38,4 +38,3 @@ class QDMCutLine(QGraphicsItem):
 
         poly = QPolygonF(self.line_points)
         painter.drawPolyline(poly)
-
